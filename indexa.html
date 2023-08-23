@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Libreria</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+  </head>
+  <body>
+    <div class="container mt-5">
+      <div class="row" id="bookRow">
+        <!-- Libri saranno inseriti qui tramite JavaScript -->
+      </div>
+    </div>
+
+    <script>
+      const bookRow = document.getElementById("bookRow");
+
+      // Effettua la chiamata GET all'endpoint dei libri
+      fetch("https://striveschool-api.herokuapp.com/books")
+        .then((response) => response.json())
+        .then((data) => {
+          // Itera attraverso i dati dei libri e crea le carte
+          data.forEach((book) => {
+            const card = createBookCard(book);
+            bookRow.appendChild(card);
+          });
+        })
+        .catch((error) => console.error("Errore nella chiamata GET:", error));
+
+      // Funzione per creare una carta libro
+      function createBookCard(book) {
+        const card = document.createElement("div");
+        card.classList.add("col-md-3", "mb-4");
+
+        card.innerHTML = `
+        <div class="card">
+          <img src="${book.img}" class="card-img-top" alt="${book.title}">
+          <div class="card-body">
+            <h5 class="card-title">${book.title}</h5>
+            <p class="card-text">Prezzo: ${book.price}$</p>
+            <button class="btn btn-danger" onclick="discardCard(this)">Scarta</button>
+          </div>
+        </div>
+      `;
+
+        return card;
+      }
+
+      // Funzione per scartare una carta libro
+      function discardCard(button) {
+        const card = button.closest(".card");
+        card.remove();
+      }
+    </script>
+  </body>
+</html>
